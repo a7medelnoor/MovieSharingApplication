@@ -9,9 +9,9 @@ data class Movies(
     @SerializedName("id")
     val id: Int,
     @SerializedName("movie_image")
-    val movieImage: Int,
+    val pictures: Int,
     @SerializedName("movie_name")
-    val movieName: String?,
+    val name: String?,
     @SerializedName("movie_description")
-    val movieDescription: String?,
+    val description: String?,
 ):Parcelable
