@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/movies_fragment"
         android:name="com.a7medelnoor.moviesharingapplication.ui.fragments.movies.MoviesFragment"
-        android:label="fragment_movies"
+        android:label="MovieSharing"
         tools:layout="@layout/fragment_movies" >
         <action
             android:id="@+id/action_moviesFragment_to_favoritesFragment"
@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/favorites_fragment"
         android:name="com.a7medelnoor.moviesharingapplication.ui.fragments.favorites.FavoritesFragment"
-        android:label="fragment_favorites"
+        android:label="MovieSharing"
         tools:layout="@layout/fragment_favorites" >
         <action
             android:id="@+id/action_favoritesFragment_to_moviesFragment"
