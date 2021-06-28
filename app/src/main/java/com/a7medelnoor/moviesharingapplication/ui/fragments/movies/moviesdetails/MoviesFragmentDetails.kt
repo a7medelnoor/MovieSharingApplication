@@ -1,4 +1,4 @@
-package com.a7medelnoor.moviesharingapplication.ui.fragments.movies.moviesDetails
+package com.a7medelnoor.moviesharingapplication.ui.fragments.movies.moviesdetails
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
