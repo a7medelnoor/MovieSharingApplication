@@ -42,11 +42,11 @@ internal class MoviesAdapter(private var moviesList: List<Movies>)  :
 
 
             Glide.with(this)
-                .load(currentMovie.movieImage)
+                .load(currentMovie.pictures)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding?.moviesImageView!!)
 
-            binding?.moviesNameTextview?.text = currentMovie.movieName
+            binding?.moviesNameTextview?.text = currentMovie.name
 
 
         }
