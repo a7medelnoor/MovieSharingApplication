@@ -24,9 +24,9 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val fragmentAdapter = ViewPagerAdapter(requireFragmentManager())
-        viewPager.adapter = fragmentAdapter
-        tabLayout.setupWithViewPager(viewPager)
+//        val fragmentAdapter = ViewPagerAdapter(requireFragmentManager())
+//        viewPager.adapter = gmfragmentAdapter
+//        tabLayout.setupWithViewPager(viewPager)
 
 
 //        var adapter = ViewPagerAdapter(requireFragmentManager(), lifecycle)
