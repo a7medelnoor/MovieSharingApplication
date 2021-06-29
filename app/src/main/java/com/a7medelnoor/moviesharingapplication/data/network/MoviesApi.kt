@@ -8,9 +8,9 @@ import retrofit2.http.Query
 interface MoviesApi {
 
     // get movies
-    @GET("users/ser143961235/videos")
+    @GET("users/143961235/videos")
     fun getMovies(): Call<Movies>
     // search movies
-    @GET("users/ser143961235/videos")
-    fun searchMovies(@Query("search") query: String?): Call<Movies>
+    @GET("query")
+    fun searchMovies(@Query("query") query: String?): Call<Movies>
 }
