@@ -17,7 +17,7 @@ internal class MoviesAdapter(private var moviesList: List<Movies>)  :
     private val differCallback = object :
         DiffUtil.ItemCallback<Movies>() {
         override fun areItemsTheSame(oldItem: Movies, newItem: Movies): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.video_id == newItem.video_id
         }
 
         override fun areContentsTheSame(oldItem: Movies, newItem: Movies): Boolean {
