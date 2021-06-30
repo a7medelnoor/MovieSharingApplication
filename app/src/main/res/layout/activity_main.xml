@@ -6,74 +6,53 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        tools:ignore="MissingConstraints">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="@style/CustomToolBarStyle"
-            app:titleTextColor="@color/black"
-            tools:ignore="MissingConstraints" />
-    </com.google.android.material.appbar.AppBarLayout>
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:animateLayoutChanges="true"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <FrameLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="1">-->
-
-            <fragment
-                android:id="@+id/fragmentContainerView"
-                android:name="androidx.navigation.fragment.NavHostFragment"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:defaultNavHost="true"
-                app:layout_constraintBottom_toTopOf="@id/bottom_navigation_view"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:navGraph="@navigation/my_navigation" />
+        android:background="@color/white"
+        android:theme="@style/CustomToolBarStyle"
+        app:titleTextColor="@color/black"
+        tools:ignore="MissingConstraints" />
 
 
-
-            <ProgressBar
-                android:id="@+id/progressbar"
-                style="@style/Widget.AppCompat.ProgressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:padding="0dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/fragmentContainerView"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="MissingConstraints" />
-<!--    app:layout_constraintTop_toTopOf="@+id/toolbar"-->
+    <fragment
+        android:id="@+id/fragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/my_navigation" />
 
 
-            <TextView
-                android:id="@+id/loading_movies_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/loading_movies_text"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@+id/progressbar"
-                app:layout_constraintStart_toStartOf="@+id/progressbar"
-                tools:layout_editor_absoluteY="417dp" />
-<!--        </FrameLayout>-->
-<!--    </LinearLayout>-->
+    <ProgressBar
+        android:id="@+id/progressbar"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentContainerView"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/loading_movies_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading_movies_text"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/progressbar"
+        app:layout_constraintStart_toStartOf="@+id/progressbar"
+        tools:layout_editor_absoluteY="417dp" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
         android:layout_width="0dp"
