@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.a7medelnoor.moviesharingapplication.ui.fragments.ListMoviesFragment;
 import com.a7medelnoor.moviesharingapplication.ui.fragments.favorites.FavoritesFragment;
 import com.a7medelnoor.moviesharingapplication.ui.fragments.movies.MoviesFragment;
 import com.a7medelnoor.moviesharingapplication.ui.fragments.movies.searchmovie.SearchMovieFragment;
@@ -14,7 +15,7 @@ import com.a7medelnoor.moviesharingapplication.ui.fragments.movies.searchmovie.S
 import org.jetbrains.annotations.NotNull;
 
 public class ViewPagerAdapterJava extends FragmentStateAdapter {
-    public ViewPagerAdapterJava(FragmentManager fm, Lifecycle lifecycle) {
+    public ViewPagerAdapterJava(  FragmentManager fm,Lifecycle  lifecycle) {
         super(fm, lifecycle);
     }
 
@@ -25,7 +26,7 @@ public class ViewPagerAdapterJava extends FragmentStateAdapter {
           case 0:
               return new MoviesFragment();
           case 1:
-              return  new SearchMovieFragment();
+              return  new ListMoviesFragment();
       }
       return null;
     }
@@ -35,21 +36,4 @@ public class ViewPagerAdapterJava extends FragmentStateAdapter {
         return 2;
     }
 
-    //    @NonNull
-//    @Override
-//    public Fragment getItem(int position) {
-//        switch (position) {
-//            case 0:
-//                return new MoviesFragment();
-//            case 1:
-//                return new FavoritesFragment();
-//            default:
-//            return new MoviesFragment();
-//        }
-//    }
-//
-//    @Override
-//    public int getCount() {
-//        return 2;
-//    }
 }
