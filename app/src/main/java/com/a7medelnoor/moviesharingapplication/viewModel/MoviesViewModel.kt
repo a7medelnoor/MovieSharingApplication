@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.a7medelnoor.moviesharingapplication.model.Movies
 import com.a7medelnoor.moviesharingapplication.model.Results
 import com.a7medelnoor.moviesharingapplication.repository.MoviesRepository
 import com.a7medelnoor.moviesharingapplication.util.NetWorkResult
@@ -22,7 +23,7 @@ class MoviesViewModel @ViewModelInject constructor(
 ):AndroidViewModel(application){
     private  val TAG = "MoviesViewModel"
 
-     val _gridListResponse :MutableLiveData<NetWorkResult<List<Results>>> = MutableLiveData()
+     val _gridListResponse :MutableLiveData<NetWorkResult<Movies>> = MutableLiveData()
      fun getMovies (queries: Map<String, String>) = viewModelScope.launch{
            getMoviesSafeCall(queries)
     }
@@ -44,7 +45,7 @@ class MoviesViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun handleMoviesResponse(response: Response<List<Results>>): NetWorkResult<List<Results>>? {
+    private fun handleMoviesResponse(response: Response<Movies>): NetWorkResult<Movies>? {
         when {
             response.message().toString().contains("timeout") -> {
                 return NetWorkResult.ERROR("Timeout")
@@ -52,7 +53,7 @@ class MoviesViewModel @ViewModelInject constructor(
             response.code() == 402 -> {
                 return NetWorkResult.ERROR("API Key Limited")
             }
-            response.body()!!.isNullOrEmpty() -> {
+            response.body()!!.results.isNullOrEmpty() -> {
                 return NetWorkResult.ERROR("Movies Not Found")
             }
             response.isSuccessful -> {
