@@ -4,7 +4,6 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
-@Parcelize
 data class Results(
     @SerializedName("movie_id")
     val movie_id: String,
@@ -16,4 +15,4 @@ data class Results(
     val movie_description: String,
     @SerializedName("movie_rating")
     val movie_rating: Int,
-):Parcelable
+)
