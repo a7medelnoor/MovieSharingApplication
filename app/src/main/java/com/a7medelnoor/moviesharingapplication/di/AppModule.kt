@@ -22,6 +22,6 @@ object AppModule {
     fun provideTargetApi(
         remoteDataSource: RemoteDataSource
     ): MoviesApi {
-        return remoteDataSource.buildApi(MoviesApi::class.java)
+        return remoteDataSource.buildApi<MoviesApi>(MoviesApi::class.java)
     }
 }
