@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="@+id/movie_image_view"
         app:layout_constraintTop_toBottomOf="@id/movie_image_view" />
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/movie_image_view"
         android:layout_width="200dp"
         android:layout_height="200dp"
