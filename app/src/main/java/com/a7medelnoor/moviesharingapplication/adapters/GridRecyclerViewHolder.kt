@@ -6,6 +6,7 @@ import coil.load
 import com.a7medelnoor.moviesharingapplication.databinding.ItemMovieBinding
 import com.a7medelnoor.moviesharingapplication.databinding.ItemPlaylist1TitleBinding
 import com.a7medelnoor.moviesharingapplication.model.GridRecyclerViewItem
+import com.a7medelnoor.moviesharingapplication.ui.loadImage
 import kotlinx.android.synthetic.main.activity_main.view.*
 
 sealed class GridRecyclerViewHolder(binding: ViewBinding) :
@@ -18,7 +19,7 @@ sealed class GridRecyclerViewHolder(binding: ViewBinding) :
     class MovieViewHolder(private val binding: ItemMovieBinding) :
         GridRecyclerViewHolder(binding) {
         fun bind(movieBinding: GridRecyclerViewItem.Movies){
-            binding.movieImageView.load(movieBinding.movie_thumbnail)
+            binding.movieImageView.loadImage(movieBinding.movie_thumbnail)
             binding.movieNameTextView.text = movieBinding.movie_name
         }
     }
