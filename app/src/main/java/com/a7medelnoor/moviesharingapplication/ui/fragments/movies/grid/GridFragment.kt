@@ -6,14 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a7medelnoor.moviesharingapplication.R
 import com.a7medelnoor.moviesharingapplication.adapters.GridRecyclerViewAdapter
 import com.a7medelnoor.moviesharingapplication.databinding.FragmentGridBinding
 import com.a7medelnoor.moviesharingapplication.ui.hide
 import com.a7medelnoor.moviesharingapplication.ui.show
-import com.a7medelnoor.moviesharingapplication.util.Resources
+import com.a7medelnoor.moviesharingapplication.util.NetWorkResult
+import com.a7medelnoor.moviesharingapplication.viewModel.MainViewModel
 import com.a7medelnoor.moviesharingapplication.viewModel.MoviesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_grid.view.*
@@ -23,8 +26,15 @@ class GridFragment : Fragment(R.layout.fragment_grid) {
     private  val TAG = "GridFragment"
     private var _binding :FragmentGridBinding? = null
     private val binding get() = _binding!!
-    private val moviesViewModels by viewModels<MoviesViewModel> ()
+    private lateinit var moviesViewModels : MoviesViewModel
+    private lateinit var mainViewModels : MainViewModel
     private val gridRecyclerViewAdapter= GridRecyclerViewAdapter()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        moviesViewModels = ViewModelProvider(requireActivity()).get(MoviesViewModel::class.java)
+        mainViewModels = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,36 +45,48 @@ class GridFragment : Fragment(R.layout.fragment_grid) {
             container,
             false
         )
-
+        setupRecyclerView()
+        requestDataFromAPI()
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun requestDataFromAPI() {
+            moviesViewModels.getMovies(mainViewModels.applyQueries())
+            moviesViewModels._gridListResponse.observe(viewLifecycleOwner, { response ->
+                Log.d(TAG,response.toString())
+
+                when(response){
+                    is NetWorkResult.SUCCESS -> {
+                        binding.progressBr.hide()
+                        response.data?.let { gridRecyclerViewAdapter.setData(it) }
+                    }
+                    is NetWorkResult.ERROR -> {
+                        binding.progressBr.hide()
+                        Toast.makeText(
+                            requireContext(),
+                            response.message.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    is NetWorkResult.LOADING -> {
+                        binding.progressBr.show()
+                    }
+                }
+
+            })
+
+
+    }
+
+    private fun setupRecyclerView() {
         binding.recyclerView.apply {
             setHasFixedSize(true)
             val layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,true)
             recyclerView.layoutManager = layoutManager
             adapter=gridRecyclerViewAdapter
-         }
-        moviesViewModels.gridListItemLiveData.observe(viewLifecycleOwner, { result ->
-            if(result != null) {
-                Log.d(TAG, "onViewCreated: "+result)
-            }
-            when(result) {
-               is Resources.ERROR -> {
-                   binding.progressBr.hide()
-               }
-             Resources.LOADING -> {binding.progressBr.show()}
-               is Resources.SUCCESS -> {
-                   binding.progressBr.hide()
-                   gridRecyclerViewAdapter.items = result.value
-                   Log.d(TAG, "onViewCreated: "+gridRecyclerViewAdapter.items)
-               }
-           }
-
-        })
+        }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
