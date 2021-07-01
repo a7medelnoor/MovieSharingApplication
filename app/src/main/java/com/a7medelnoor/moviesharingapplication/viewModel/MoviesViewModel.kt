@@ -1,43 +1,85 @@
 package com.a7medelnoor.moviesharingapplication.viewModel
 
+import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.a7medelnoor.moviesharingapplication.model.GridRecyclerViewItem
+import androidx.lifecycle.*
+import com.a7medelnoor.moviesharingapplication.model.Results
 import com.a7medelnoor.moviesharingapplication.repository.MoviesRepository
-import com.a7medelnoor.moviesharingapplication.util.Resources
-import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.async
+import com.a7medelnoor.moviesharingapplication.util.NetWorkResult
 import kotlinx.coroutines.launch
-import javax.annotation.Resource
-import javax.inject.Inject
+import retrofit2.Response
+import java.lang.Exception
 
 class MoviesViewModel @ViewModelInject constructor(
-    private val repository: MoviesRepository
-):ViewModel(){
+    private val repository: MoviesRepository,
+    application: Application
+):AndroidViewModel(application){
+    private  val TAG = "MoviesViewModel"
 
-    private val _gridListItemLiveData = MutableLiveData<Resources<List<GridRecyclerViewItem>>>()
-    val gridListItemLiveData: LiveData<Resources<List<GridRecyclerViewItem>>>
-    get() = _gridListItemLiveData
-    init {
-        getGridListItems()
+     val _gridListResponse :MutableLiveData<NetWorkResult<List<Results>>> = MutableLiveData()
+     fun getMovies (queries: Map<String, String>) = viewModelScope.launch{
+           getMoviesSafeCall(queries)
     }
 
-    private fun getGridListItems() = viewModelScope.launch {
-     _gridListItemLiveData.postValue(Resources.LOADING)
-        val movieDeferred = async { repository.getMovies() }
-        val movies = movieDeferred.await()
+    @RequiresApi(Build.VERSION_CODES.M)
+    private suspend fun getMoviesSafeCall(queries: Map<String, String>) {
+          _gridListResponse.value = NetWorkResult.LOADING()
+        if (hasInternetConnection()){
+            try {
+               val response = repository.remoteDataSource.getMovies(queries)
+                _gridListResponse.value = handleMoviesResponse(response)
 
-        val gridItemList = mutableListOf<GridRecyclerViewItem>()
-        if (movies is Resources.SUCCESS){
-            gridItemList.add(GridRecyclerViewItem.Title(1,"PlayList 1"))
-            gridItemList.addAll(movies.value)
-            _gridListItemLiveData.postValue(Resources.SUCCESS(gridItemList))
+            }catch (e: Exception){
+               _gridListResponse.value = NetWorkResult.ERROR(e.toString())
+                Log.d(TAG,e.toString())
+            }
         }else{
-             Resources.ERROR(false,null,null)
+            _gridListResponse.value = NetWorkResult.ERROR("No internet connection")
         }
     }
+
+    private fun handleMoviesResponse(response: Response<List<Results>>): NetWorkResult<List<Results>>? {
+        when {
+            response.message().toString().contains("timeout") -> {
+                return NetWorkResult.ERROR("Timeout")
+            }
+            response.code() == 402 -> {
+                return NetWorkResult.ERROR("API Key Limited")
+            }
+            response.body()!!.isNullOrEmpty() -> {
+                return NetWorkResult.ERROR("Movies Not Found")
+            }
+            response.isSuccessful -> {
+                val moviesResponse = response.body()
+                return NetWorkResult.SUCCESS(moviesResponse!!)
+            }
+            else -> {
+                return NetWorkResult.ERROR(response.message())
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun hasInternetConnection(): Boolean {
+        val connectivityManager = getApplication<Application>().getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        return when {
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+
+        }
+    }
+
 }
 
