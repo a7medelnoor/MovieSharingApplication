@@ -19,9 +19,35 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideTargetApi(
-        remoteDataSource: RemoteDataSource
-    ): MoviesApi {
-        return remoteDataSource.buildApi<MoviesApi>(MoviesApi::class.java)
+    fun provideHttpClient() : OkHttpClient {
+        return OkHttpClient.Builder()
+            .readTimeout(15, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideConverterFactory(): GsonConverterFactory {
+        return GsonConverterFactory.create()
+    }
+
+    @Singleton
+    @Provides
+    fun provideRetrofitInstance(
+        okHttpClient: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(gsonConverterFactory)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideApiService(retrofit: Retrofit): MoviesApi {
+        return retrofit.create(MoviesApi::class.java)
     }
 }
